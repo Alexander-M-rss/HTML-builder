@@ -9,17 +9,19 @@ function copyDir(source, destination) {
     process.exit();
   };
 
-  fs.mkdir(destination, { recursive: true }, (err) => { if (err) errMesageOut(err); });
-  fs.readdir(source, {withFileTypes: true}, (err, items) => {
+  fs.mkdir(destination, { recursive: true }, (err) => {
     if (err) errMesageOut(err);
-    items.forEach(item => {
-      if (item.isFile()) {
-        fs.copyFile(path.resolve(source, item.name), path.resolve(destination, item.name), err => {
-          if (err) errMesageOut(err);
-        });
-      } else {
-        copyDir(path.resolve(source, item.name), path.resolve(destination, item.name));
-      }
+    fs.readdir(source, {withFileTypes: true}, (err, items) => {
+      if (err) errMesageOut(err);
+      items.forEach(item => {
+        if (item.isFile()) {
+          fs.copyFile(path.resolve(source, item.name), path.resolve(destination, item.name), err => {
+            if (err) errMesageOut(err);
+          });
+        } else {
+          copyDir(path.resolve(source, item.name), path.resolve(destination, item.name));
+        }
+      });
     });
   });
 }
